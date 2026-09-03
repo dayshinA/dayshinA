@@ -1,4 +1,4 @@
-# Hey! <img src="https://user-images.githubusercontent.com/1303154/88677602-1635ba80-d120-11ea-84d8-d263ba5fc3c0.gif" width="28px" alt="Hey gif"> I'mDayshin
+<h1 align="center">Hey, I'm Dayshin 👋</h1>
 
 <h3 align="center">Software Engineer | Full-Stack & Mobile Development</h3>
 
