@@ -3,9 +3,7 @@ name: Update GitHub Stats
 on:
   schedule:
     - cron: "0 0 * * *"
-
   workflow_dispatch:
-
   push:
     branches:
       - main
@@ -32,12 +30,15 @@ jobs:
           import os
           import json
           import html
-          import urllib.request
+          import re
+          import urllib.error
           import urllib.parse
+          import urllib.request
+          from collections import Counter, defaultdict
+          from datetime import datetime, timedelta, timezone
 
           TOKEN = os.environ["GH_STATS_TOKEN"]
           USERNAME = os.environ["GITHUB_USERNAME"]
-
           API_VERSION = "2026-03-10"
 
           headers = {
@@ -47,29 +48,38 @@ jobs:
               "User-Agent": f"{USERNAME}-profile-stats",
           }
 
+          def request_json(url, allowed_statuses=()):
+              request = urllib.request.Request(url, headers=headers)
+              try:
+                  with urllib.request.urlopen(request) as response:
+                      payload = json.loads(response.read().decode("utf-8"))
+                      return payload, response.headers
+              except urllib.error.HTTPError as error:
+                  if error.code in allowed_statuses:
+                      return None, error.headers
+                  raise
 
-          def request_json(url):
-              request = urllib.request.Request(
-                  url,
-                  headers=headers,
-              )
+          def escape(value):
+              return html.escape(str(value))
 
-              with urllib.request.urlopen(request) as response:
-                  return json.loads(response.read().decode("utf-8"))
+          def parse_last_page(link_header):
+              if not link_header:
+                  return None
 
+              for part in link_header.split(","):
+                  if 'rel="last"' not in part:
+                      continue
+                  match = re.search(r"[?&]page=(\d+)", part)
+                  if match:
+                      return int(match.group(1))
+
+              return None
 
           # ---------------------------------------------------------
-          # Get every repository visible to this token.
-          #
-          # Includes:
-          # - repositories owned by Dayshin
-          # - private repositories
-          # - repositories where Dayshin is a collaborator
-          # - organisation repositories accessible through membership
+          # Repositories visible to the token
           # ---------------------------------------------------------
 
           repositories = []
-
           page = 1
 
           while True:
@@ -81,9 +91,9 @@ jobs:
                   "sort": "full_name",
               })
 
-              url = f"https://api.github.com/user/repos?{params}"
-
-              batch = request_json(url)
+              batch, _ = request_json(
+                  f"https://api.github.com/user/repos?{params}"
+              )
 
               if not batch:
                   break
@@ -95,96 +105,150 @@ jobs:
 
               page += 1
 
-
-          # Deduplicate in case GitHub returns a repo through
-          # more than one affiliation relationship.
-
-          repos_by_id = {
-              repo["id"]: repo
-              for repo in repositories
-          }
-
-          repositories = list(repos_by_id.values())
-
-
-          # ---------------------------------------------------------
-          # Repository statistics
-          # ---------------------------------------------------------
+          repositories = list({repo["id"]: repo for repo in repositories}.values())
 
           total_repos = len(repositories)
-
           personal_repos = sum(
-              1
-              for repo in repositories
+              1 for repo in repositories
               if repo["owner"]["login"].lower() == USERNAME.lower()
           )
-
           organisation_repos = sum(
-              1
-              for repo in repositories
+              1 for repo in repositories
               if repo["owner"].get("type") == "Organization"
           )
-
-          private_repos = sum(
-              1
-              for repo in repositories
-              if repo.get("private", False)
+          collaborator_repos = sum(
+              1 for repo in repositories
+              if repo["owner"].get("type") == "User"
+              and repo["owner"]["login"].lower() != USERNAME.lower()
           )
-
+          private_repos = sum(1 for repo in repositories if repo.get("private"))
           public_repos = total_repos - private_repos
 
-          forks = sum(
-              1
+          # ---------------------------------------------------------
+          # Languages by repository
+          #
+          # Each repository contributes once, based on its primary
+          # language reported by GitHub.
+          # ---------------------------------------------------------
+
+          repo_language_counts = Counter(
+              repo["language"]
               for repo in repositories
-              if repo.get("fork", False)
+              if repo.get("language")
           )
 
-
           # ---------------------------------------------------------
-          # Aggregate languages across ALL accessible repositories.
+          # Commits by repository + contribution activity
           #
-          # No repository names are written to the public SVG.
+          # All-time commit count is obtained cheaply using per_page=1
+          # and GitHub's pagination metadata. The contribution graph
+          # separately fetches the last 12 months of commit dates.
+          #
+          # Commits are attributed to the repository's primary language,
+          # matching the idea of a "most commit language" card without
+          # exposing repository names.
           # ---------------------------------------------------------
 
-          languages = {}
+          today = datetime.now(timezone.utc).date()
+          activity_start = today - timedelta(days=364)
+
+          # The heatmap uses 53 complete Sunday-Saturday columns and
+          # always includes the current week.
+          days_until_saturday = (5 - today.weekday()) % 7
+          grid_end = today + timedelta(days=days_until_saturday)
+          grid_start = grid_end - timedelta(days=(53 * 7) - 1)
+          graph_since = f"{grid_start.isoformat()}T00:00:00Z"
+
+          commit_language_counts = Counter()
+          daily_commits = defaultdict(int)
+          total_commits = 0
 
           for repo in repositories:
-              languages_url = repo.get("languages_url")
+              commits_url = repo["commits_url"].replace("{/sha}", "")
+              primary_language = repo.get("language")
 
-              if not languages_url:
-                  continue
+              # All-time commits by this account in the repository.
+              count_params = urllib.parse.urlencode({
+                  "author": USERNAME,
+                  "per_page": 1,
+                  "page": 1,
+              })
 
               try:
-                  repo_languages = request_json(languages_url)
-              except Exception as error:
-                  # A repo may be visible while its contents/language data
-                  # are restricted by the organisation.
-                  print(
-                      f"Could not read language data for repository "
-                      f"{repo.get('id')}: {error}"
+                  first_page, first_headers = request_json(
+                      f"{commits_url}?{count_params}",
+                      allowed_statuses=(403, 404, 409),
                   )
-                  continue
+              except Exception:
+                  first_page = None
+                  first_headers = None
 
-              for language, byte_count in repo_languages.items():
-                  languages[language] = (
-                      languages.get(language, 0)
-                      + byte_count
-                  )
+              repo_commit_count = 0
 
+              if first_page:
+                  last_page = parse_last_page(first_headers.get("Link"))
+                  repo_commit_count = last_page if last_page else len(first_page)
 
-          total_language_bytes = sum(languages.values())
+              total_commits += repo_commit_count
 
-          sorted_languages = sorted(
-              languages.items(),
-              key=lambda item: item[1],
-              reverse=True,
+              if primary_language and repo_commit_count:
+                  commit_language_counts[primary_language] += repo_commit_count
+
+              # Last 12 months for the custom contribution graph.
+              recent_page = 1
+
+              while True:
+                  recent_params = urllib.parse.urlencode({
+                      "author": USERNAME,
+                      "since": graph_since,
+                      "per_page": 100,
+                      "page": recent_page,
+                  })
+
+                  try:
+                      recent_commits, _ = request_json(
+                          f"{commits_url}?{recent_params}",
+                          allowed_statuses=(403, 404, 409),
+                      )
+                  except Exception:
+                      recent_commits = None
+
+                  if not recent_commits:
+                      break
+
+                  for commit in recent_commits:
+                      date_text = (
+                          commit.get("commit", {})
+                          .get("author", {})
+                          .get("date")
+                      )
+
+                      if not date_text:
+                          continue
+
+                      try:
+                          commit_date = datetime.fromisoformat(
+                              date_text.replace("Z", "+00:00")
+                          ).date()
+                      except ValueError:
+                          continue
+
+                      if grid_start <= commit_date <= today:
+                          daily_commits[commit_date] += 1
+
+                  if len(recent_commits) < 100:
+                      break
+
+                  recent_page += 1
+
+          recent_commit_total = sum(
+              count
+              for date, count in daily_commits.items()
+              if activity_start <= date <= today
           )
 
-          top_languages = sorted_languages[:8]
-
-
           # ---------------------------------------------------------
-          # SVG helpers
+          # Shared SVG styling
           # ---------------------------------------------------------
 
           language_colours = {
@@ -204,9 +268,14 @@ jobs:
               "Ruby": "#701516",
               "HTML": "#e34c26",
               "CSS": "#663399",
+              "SCSS": "#c6538c",
               "Shell": "#89e051",
               "Svelte": "#ff3e00",
               "Vue": "#41b883",
+              "Hack": "#878787",
+              "Objective-C": "#438eff",
+              "Jupyter Notebook": "#DA5B0B",
+              "Makefile": "#427819",
           }
 
           fallback_colours = [
@@ -220,303 +289,259 @@ jobs:
               "#56d4dd",
           ]
 
-
-          def escape(value):
-              return html.escape(str(value))
-
-
-          # ---------------------------------------------------------
-          # Generate stats.svg
-          # ---------------------------------------------------------
-
-          stats_svg = f"""<svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="495"
-            height="205"
-            viewBox="0 0 495 205"
-            role="img"
-            aria-label="Dayshin GitHub statistics"
-          >
-            <style>
-              .title {{
-                font: 600 18px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #58a6ff;
-              }}
-
-              .label {{
-                font: 400 14px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #c9d1d9;
-              }}
-
-              .value {{
-                font: 600 14px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #ffffff;
-              }}
-
-              .footer {{
-                font: 400 11px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #8b949e;
-              }}
-            </style>
-
-            <rect
-              x="0.5"
-              y="0.5"
-              rx="6"
-              width="494"
-              height="204"
-              fill="#0d1117"
-              stroke="#30363d"
-            />
-
-            <text
-              x="25"
-              y="35"
-              class="title"
-            >
-              Dayshin's GitHub
-            </text>
-
-            <text x="25" y="72" class="label">
-              Accessible repositories
-            </text>
-
-            <text x="455" y="72" text-anchor="end" class="value">
-              {total_repos}
-            </text>
-
-            <text x="25" y="100" class="label">
-              Personal repositories
-            </text>
-
-            <text x="455" y="100" text-anchor="end" class="value">
-              {personal_repos}
-            </text>
-
-            <text x="25" y="128" class="label">
-              Organisation repositories
-            </text>
-
-            <text x="455" y="128" text-anchor="end" class="value">
-              {organisation_repos}
-            </text>
-
-            <text x="25" y="156" class="label">
-              Private / Public
-            </text>
-
-            <text x="455" y="156" text-anchor="end" class="value">
-              {private_repos} / {public_repos}
-            </text>
-
-            <text x="25" y="188" class="footer">
-              Aggregated without exposing private repository names
-            </text>
-          </svg>
-          """
-
-          with open(
-              "profile/stats.svg",
-              "w",
-              encoding="utf-8",
-          ) as file:
-              file.write(stats_svg)
-
-
-          # ---------------------------------------------------------
-          # Generate top-langs.svg
-          # ---------------------------------------------------------
-
-          width = 495
-
-          title_y = 35
-          bar_x = 25
-          bar_width = 445
-          bar_height = 8
-          first_row_y = 74
-          row_height = 34
-
-          height = (
-              95
-              + max(len(top_languages), 1) * row_height
-          )
-
-          language_rows = []
-
-          if total_language_bytes == 0:
-              language_rows.append(
-                  """
-                  <text
-                    x="25"
-                    y="80"
-                    class="label"
-                  >
-                    No language data available to this token.
-                  </text>
-                  """
+          def colour_for(language, index):
+              return language_colours.get(
+                  language,
+                  fallback_colours[index % len(fallback_colours)],
               )
 
-          else:
-              for index, (language, byte_count) in enumerate(
-                  top_languages
-              ):
-                  percentage = (
-                      byte_count
-                      / total_language_bytes
-                      * 100
+          def make_language_card(title, counts, output_path, aria_label):
+              width = 495
+              top_items = counts.most_common(8)
+              total = sum(counts.values())
+              row_height = 31
+              first_row_y = 70
+              bar_x = 25
+              bar_width = 445
+              bar_height = 7
+              height = 78 + max(len(top_items), 1) * row_height
+
+              rows = []
+
+              if not top_items or total == 0:
+                  rows.append(
+                      '<text x="25" y="78" class="label">No language data available.</text>'
                   )
+              else:
+                  for index, (language, count) in enumerate(top_items):
+                      percentage = count / total * 100
+                      y = first_row_y + index * row_height
+                      filled_width = max(bar_width * percentage / 100, 2)
+                      colour = colour_for(language, index)
 
-                  y = first_row_y + index * row_height
+                      rows.append(f"""
+                        <text x="{bar_x}" y="{y}" class="label">{escape(language)}</text>
+                        <text x="{bar_x + bar_width}" y="{y}" text-anchor="end" class="percentage">{percentage:.1f}%</text>
+                        <rect x="{bar_x}" y="{y + 9}" rx="3.5" width="{bar_width}" height="{bar_height}" fill="#21262d" />
+                        <rect x="{bar_x}" y="{y + 9}" rx="3.5" width="{filled_width:.2f}" height="{bar_height}" fill="{colour}" />
+                      """)
 
-                  colour = language_colours.get(
-                      language,
-                      fallback_colours[
-                          index % len(fallback_colours)
-                      ],
-                  )
+              svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-label="{escape(aria_label)}">
+                <style>
+                  .title {{ font: 600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #58a6ff; }}
+                  .label {{ font: 500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #c9d1d9; }}
+                  .percentage {{ font: 400 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }}
+                </style>
+                <rect x="0.5" y="0.5" rx="6" width="{width - 1}" height="{height - 1}" fill="#0d1117" stroke="#30363d" />
+                <text x="25" y="35" class="title">{escape(title)}</text>
+                {''.join(rows)}
+              </svg>
+              """
 
-                  filled_width = max(
-                      bar_width * percentage / 100,
-                      2,
-                  )
+              with open(output_path, "w", encoding="utf-8") as file:
+                  file.write(svg)
 
-                  language_rows.append(
-                      f"""
-                      <text
-                        x="{bar_x}"
-                        y="{y}"
-                        class="label"
-                      >
-                        {escape(language)}
-                      </text>
+          # ---------------------------------------------------------
+          # stats.svg
+          # ---------------------------------------------------------
 
-                      <text
-                        x="{bar_x + bar_width}"
-                        y="{y}"
-                        text-anchor="end"
-                        class="percentage"
-                      >
-                        {percentage:.1f}%
-                      </text>
-
-                      <rect
-                        x="{bar_x}"
-                        y="{y + 10}"
-                        rx="4"
-                        width="{bar_width}"
-                        height="{bar_height}"
-                        fill="#21262d"
-                      />
-
-                      <rect
-                        x="{bar_x}"
-                        y="{y + 10}"
-                        rx="4"
-                        width="{filled_width:.2f}"
-                        height="{bar_height}"
-                        fill="{colour}"
-                      />
-                      """
-                  )
-
-
-          langs_svg = f"""<svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="{width}"
-            height="{height}"
-            viewBox="0 0 {width} {height}"
-            role="img"
-            aria-label="Languages across repositories accessible to Dayshin"
-          >
+          stats_svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="495" height="226" viewBox="0 0 495 226" role="img" aria-label="Dayshin GitHub statistics">
             <style>
-              .title {{
-                font: 600 18px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #58a6ff;
-              }}
-
-              .label {{
-                font: 500 13px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #c9d1d9;
-              }}
-
-              .percentage {{
-                font: 400 12px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #8b949e;
-              }}
-
-              .footer {{
-                font: 400 11px -apple-system,BlinkMacSystemFont,
-                      "Segoe UI",Helvetica,Arial,sans-serif;
-                fill: #8b949e;
-              }}
+              .title {{ font: 600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #58a6ff; }}
+              .label {{ font: 400 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #c9d1d9; }}
+              .value {{ font: 600 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #ffffff; }}
             </style>
+            <rect x="0.5" y="0.5" rx="6" width="494" height="225" fill="#0d1117" stroke="#30363d" />
+            <text x="25" y="35" class="title">Dayshin's GitHub</text>
 
-            <rect
-              x="0.5"
-              y="0.5"
-              rx="6"
-              width="{width - 1}"
-              height="{height - 1}"
-              fill="#0d1117"
-              stroke="#30363d"
-            />
+            <text x="25" y="70" class="label">Accessible repositories</text>
+            <text x="455" y="70" text-anchor="end" class="value">{total_repos}</text>
 
-            <text
-              x="25"
-              y="{title_y}"
-              class="title"
-            >
-              Languages Across My GitHub
-            </text>
+            <text x="25" y="99" class="label">Personal repositories</text>
+            <text x="455" y="99" text-anchor="end" class="value">{personal_repos}</text>
 
-            {''.join(language_rows)}
+            <text x="25" y="128" class="label">Organisation repositories</text>
+            <text x="455" y="128" text-anchor="end" class="value">{organisation_repos}</text>
 
-            <text
-              x="25"
-              y="{height - 20}"
-              class="footer"
-            >
-              Personal, private and accessible organisation repositories
-            </text>
+            <text x="25" y="157" class="label">Other collaborator repositories</text>
+            <text x="455" y="157" text-anchor="end" class="value">{collaborator_repos}</text>
+
+            <text x="25" y="186" class="label">Private / Public</text>
+            <text x="455" y="186" text-anchor="end" class="value">{private_repos} / {public_repos}</text>
+
+            <text x="25" y="215" class="label">Commits by me</text>
+            <text x="455" y="215" text-anchor="end" class="value">{total_commits:,}</text>
           </svg>
           """
 
-          with open(
-              "profile/top-langs.svg",
-              "w",
-              encoding="utf-8",
-          ) as file:
-              file.write(langs_svg)
+          with open("profile/stats.svg", "w", encoding="utf-8") as file:
+              file.write(stats_svg)
 
+          # ---------------------------------------------------------
+          # Language cards
+          # ---------------------------------------------------------
+
+          make_language_card(
+              "Languages by Repository",
+              repo_language_counts,
+              "profile/languages-by-repo.svg",
+              "Languages by repository across repositories accessible to Dayshin",
+          )
+
+          make_language_card(
+              "Languages by Commits",
+              commit_language_counts,
+              "profile/languages-by-commit.svg",
+              "Languages by Dayshin's commits across accessible repositories",
+          )
+
+          # ---------------------------------------------------------
+          # Contribution graph
+          # ---------------------------------------------------------
+
+          graph_width = 830
+          graph_height = 174
+          cell = 11
+          gap = 3
+          step = cell + gap
+          left = 48
+          top = 58
+
+          max_count = max(daily_commits.values(), default=0)
+
+          def contribution_colour(count):
+              if count <= 0:
+                  return "#161b22"
+              if max_count <= 1:
+                  return "#0e4429"
+
+              ratio = count / max_count
+              if ratio <= 0.25:
+                  return "#0e4429"
+              if ratio <= 0.50:
+                  return "#006d32"
+              if ratio <= 0.75:
+                  return "#26a641"
+              return "#39d353"
+
+          cells = []
+          month_labels = []
+          weekday_labels = [(1, "Mon"), (3, "Wed"), (5, "Fri")]
+
+          previous_month = None
+
+          for week in range(53):
+              week_start = grid_start + timedelta(days=week * 7)
+
+              if week_start.month != previous_month and week_start.day <= 7:
+                  month_labels.append(
+                      f'<text x="{left + week * step}" y="48" class="month">{week_start.strftime("%b")}</text>'
+                  )
+                  previous_month = week_start.month
+
+              for day_index in range(7):
+                  date = week_start + timedelta(days=day_index)
+                  count = daily_commits.get(date, 0)
+                  x = left + week * step
+                  y = top + day_index * step
+                  opacity = "1" if date <= today else "0.25"
+
+                  cells.append(
+                      f'<rect x="{x}" y="{y}" width="{cell}" height="{cell}" rx="2" fill="{contribution_colour(count)}" opacity="{opacity}"><title>{date.isoformat()}: {count} commit{"s" if count != 1 else ""}</title></rect>'
+                  )
+
+          weekday_text = []
+          for day_index, label in weekday_labels:
+              weekday_text.append(
+                  f'<text x="8" y="{top + day_index * step + 9}" class="weekday">{label}</text>'
+              )
+
+          contribution_svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="{graph_width}" height="{graph_height}" viewBox="0 0 {graph_width} {graph_height}" role="img" aria-label="Dayshin contribution activity across accessible repositories">
+            <style>
+              .title {{ font: 600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #58a6ff; }}
+              .subtitle {{ font: 400 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }}
+              .month {{ font: 400 11px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }}
+              .weekday {{ font: 400 10px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }}
+            </style>
+            <rect x="0.5" y="0.5" rx="6" width="{graph_width - 1}" height="{graph_height - 1}" fill="#0d1117" stroke="#30363d" />
+            <text x="25" y="30" class="title">Contribution Activity</text>
+            <text x="805" y="30" text-anchor="end" class="subtitle">{recent_commit_total:,} commits · last 12 months</text>
+            {''.join(month_labels)}
+            {''.join(weekday_text)}
+            {''.join(cells)}
+          </svg>
+          """
+
+          with open("profile/contributions.svg", "w", encoding="utf-8") as file:
+              file.write(contribution_svg)
+
+          # ---------------------------------------------------------
+          # Streak card generated from the same contribution dataset
+          # ---------------------------------------------------------
+
+          active_dates = {
+              date for date, count in daily_commits.items() if count > 0
+          }
+
+          streak_end = today if today in active_dates else today - timedelta(days=1)
+          current_streak = 0
+          cursor = streak_end
+
+          while cursor in active_dates and cursor >= activity_start:
+              current_streak += 1
+              cursor -= timedelta(days=1)
+
+          longest_streak = 0
+          running_streak = 0
+          longest_end = None
+          cursor = activity_start
+
+          while cursor <= today:
+              if cursor in active_dates:
+                  running_streak += 1
+                  if running_streak > longest_streak:
+                      longest_streak = running_streak
+                      longest_end = cursor
+              else:
+                  running_streak = 0
+              cursor += timedelta(days=1)
+
+          streak_svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="495" height="160" viewBox="0 0 495 160" role="img" aria-label="Dayshin GitHub commit streak">
+            <style>
+              .title {{ font: 600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #58a6ff; }}
+              .number {{ font: 700 28px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #ffffff; }}
+              .label {{ font: 400 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }}
+              .accent {{ fill: #39d353; }}
+            </style>
+            <rect x="0.5" y="0.5" rx="6" width="494" height="159" fill="#0d1117" stroke="#30363d" />
+            <text x="25" y="35" class="title">Commit Streak</text>
+
+            <text x="82" y="94" text-anchor="middle" class="number">{current_streak}</text>
+            <text x="82" y="119" text-anchor="middle" class="label">Current streak</text>
+
+            <line x1="165" y1="58" x2="165" y2="126" stroke="#30363d" />
+
+            <text x="247" y="94" text-anchor="middle" class="number">{longest_streak}</text>
+            <text x="247" y="119" text-anchor="middle" class="label">Longest streak · 12 mo</text>
+
+            <line x1="330" y1="58" x2="330" y2="126" stroke="#30363d" />
+
+            <text x="412" y="94" text-anchor="middle" class="number accent">{recent_commit_total:,}</text>
+            <text x="412" y="119" text-anchor="middle" class="label">Commits · 12 mo</text>
+          </svg>
+          """
+
+          with open("profile/streak.svg", "w", encoding="utf-8") as file:
+              file.write(streak_svg)
 
           print(f"Accessible repositories: {total_repos}")
           print(f"Personal repositories: {personal_repos}")
           print(f"Organisation repositories: {organisation_repos}")
+          print(f"Other collaborator repositories: {collaborator_repos}")
           print(f"Private repositories: {private_repos}")
           print(f"Public repositories: {public_repos}")
-          print(f"Forks: {forks}")
-
-          print("Top languages:")
-
-          for language, byte_count in top_languages:
-              if total_language_bytes:
-                  percentage = (
-                      byte_count
-                      / total_language_bytes
-                      * 100
-                  )
-
-                  print(
-                      f"  {language}: {percentage:.2f}%"
-                  )
-
+          print(f"Commits by {USERNAME}: {total_commits}")
+          print(f"Commits in contribution graph: {recent_commit_total}")
           PY
 
       - name: Commit updated statistics
@@ -524,7 +549,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add profile/stats.svg profile/top-langs.svg
+          git add \
+            profile/stats.svg \
+            profile/languages-by-repo.svg \
+            profile/languages-by-commit.svg \
+            profile/contributions.svg \
+            profile/streak.svg
 
           if git diff --cached --quiet; then
             echo "No stats changes to commit."

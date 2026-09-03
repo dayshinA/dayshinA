@@ -70,15 +70,20 @@ I enjoy building reliable software, designing clean APIs, working with scalable 
 ### 📊 GitHub
 
 <p align="center">
-  <img height="200" src="./profile/stats.svg" alt="Dayshin's GitHub Stats" />
+  <img src="./profile/stats.svg" alt="Dayshin's GitHub Stats" />
 </p>
 
 <p align="center">
-  <img src="./profile/top-langs.svg" alt="Dayshin's Languages" />
+  <img width="49%" src="./profile/languages-by-repo.svg" alt="Dayshin's Languages by Repository" />
+  <img width="49%" src="./profile/languages-by-commit.svg" alt="Dayshin's Languages by Commits" />
 </p>
 
 <p align="center">
-  <img src="https://streak-stats.demolab.com?user=dayshinA&theme=github-dark-blue&hide_border=true" alt="Dayshin's GitHub Streak" />
+  <img src="./profile/streak.svg" alt="Dayshin's Commit Streak" />
+</p>
+
+<p align="center">
+  <img src="./profile/contributions.svg" alt="Dayshin's Contribution Activity" />
 </p>
 
 ---
