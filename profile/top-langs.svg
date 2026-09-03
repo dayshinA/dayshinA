@@ -1,273 +1,342 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="495"
+  height="367"
+  viewBox="0 0 495 367"
+  role="img"
+  aria-label="Languages across repositories accessible to Dayshin"
+>
+  <style>
+    .title {
+      font: 600 18px -apple-system,BlinkMacSystemFont,
+            "Segoe UI",Helvetica,Arial,sans-serif;
+      fill: #58a6ff;
+    }
 
-      <svg
-        width="300"
-        height="190"
-        viewBox="0 0 300 190"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-labelledby="descId"
-      >
-        <title id="titleId"></title>
-        <desc id="descId"></desc>
-        <style>
-          .header {
-            font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
-            fill: #58A6FF;
-            animation: fadeInAnimation 0.8s ease-in-out forwards;
-          }
-          @supports(-moz-appearance: auto) {
-            /* Selector detects Firefox */
-            .header { font-size: 15.5px; }
-          }
-          
-    @keyframes slideInAnimation {
-      from {
-        width: 0;
-      }
-      to {
-        width: calc(100%-100px);
-      }
+    .label {
+      font: 500 13px -apple-system,BlinkMacSystemFont,
+            "Segoe UI",Helvetica,Arial,sans-serif;
+      fill: #c9d1d9;
     }
-    @keyframes growWidthAnimation {
-      from {
-        width: 0;
-      }
-      to {
-        width: 100%;
-      }
-    }
-    .stat {
-      font: 600 14px 'Segoe UI', Ubuntu, "Helvetica Neue", Sans-Serif; fill: #C3D1D9;
-    }
-    @supports(-moz-appearance: auto) {
-      /* Selector detects Firefox */
-      .stat { font-size:12px; }
-    }
-    .bold { font-weight: 700 }
-    .lang-name {
-      font: 400 11px "Segoe UI", Ubuntu, Sans-Serif;
-      fill: #C3D1D9;
-    }
-    .stagger {
-      opacity: 0;
-      animation: fadeInAnimation 0.3s ease-in-out forwards;
-    }
-    #rect-mask rect{
-      animation: slideInAnimation 1s ease-in-out forwards;
-    }
-    .lang-progress{
-      animation: growWidthAnimation 0.6s ease-in-out forwards;
-    }
-    
 
-          
-      /* Animations */
-      @keyframes scaleInAnimation {
-        from {
-          transform: translate(-5px, 5px) scale(0);
-        }
-        to {
-          transform: translate(-5px, 5px) scale(1);
-        }
-      }
-      @keyframes fadeInAnimation {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    
-          
-        </style>
+    .percentage {
+      font: 400 12px -apple-system,BlinkMacSystemFont,
+            "Segoe UI",Helvetica,Arial,sans-serif;
+      fill: #8b949e;
+    }
 
-        
+    .footer {
+      font: 400 11px -apple-system,BlinkMacSystemFont,
+            "Segoe UI",Helvetica,Arial,sans-serif;
+      fill: #8b949e;
+    }
+  </style>
 
-        <rect
-          data-testid="card-bg"
-          x="0.5"
-          y="0.5"
-          rx="4.5"
-          height="99%"
-          stroke="#e4e2e2"
-          width="299"
-          fill="#0D1117"
-          stroke-opacity="0"
-        />
+  <rect
+    x="0.5"
+    y="0.5"
+    rx="6"
+    width="494"
+    height="366"
+    fill="#0d1117"
+    stroke="#30363d"
+  />
 
-        
-      <g
-        data-testid="card-title"
-        transform="translate(25, 35)"
-      >
-        <g transform="translate(0, 0)">
-      <text
-        x="0"
-        y="0"
-        class="header"
-        data-testid="header"
-      >Most Used Languages</text>
-    </g>
-      </g>
-    
+  <text
+    x="25"
+    y="35"
+    class="title"
+  >
+    Languages Across My GitHub
+  </text>
 
-        <g
-          data-testid="main-card-body"
-          transform="translate(0, 55)"
-        >
-          
-    <svg data-testid="lang-items" x="25">
-      
   
-      <mask id="rect-mask">
-          <rect x="0" y="0" width="250" height="8" fill="white" rx="5"/>
-        </mask>
-        
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="0"
-          y="0"
-          width="88.69"
-          height="8"
-          fill="#878787"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="88.69"
-          y="0"
-          width="54.09"
-          height="8"
-          fill="#f1e05a"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="142.78"
-          y="0"
-          width="27.22"
-          height="8"
-          fill="#3178c6"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="170"
-          y="0"
-          width="26.26"
-          height="8"
-          fill="#c6538c"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="196.26"
-          y="0"
-          width="24.07"
-          height="8"
-          fill="#4F5D95"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="220.32999999999998"
-          y="0"
-          width="11.37"
-          height="8"
-          fill="#00B4AB"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="231.7"
-          y="0"
-          width="11.11"
-          height="8"
-          fill="#438eff"
-        />
-      
-        <rect
-          mask="url(#rect-mask)"
-          data-testid="lang-progress"
-          x="242.81"
-          y="0"
-          width="17.2"
-          height="8"
-          fill="#663399"
-        />
-      
-      
-    <g transform="translate(0, 25)">
-      <g transform="translate(0, 0)"><g transform="translate(0, 0)">
-    <g class="stagger" style="animation-delay: 450ms">
-      <circle cx="5" cy="6" r="5" fill="#878787" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        Hack 35.48%
-      </text>
-    </g>
-  </g><g transform="translate(0, 25)">
-    <g class="stagger" style="animation-delay: 600ms">
-      <circle cx="5" cy="6" r="5" fill="#f1e05a" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        JavaScript 21.64%
-      </text>
-    </g>
-  </g><g transform="translate(0, 50)">
-    <g class="stagger" style="animation-delay: 750ms">
-      <circle cx="5" cy="6" r="5" fill="#3178c6" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        TypeScript 10.89%
-      </text>
-    </g>
-  </g><g transform="translate(0, 75)">
-    <g class="stagger" style="animation-delay: 900ms">
-      <circle cx="5" cy="6" r="5" fill="#c6538c" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        SCSS 10.50%
-      </text>
-    </g>
-  </g></g><g transform="translate(150, 0)"><g transform="translate(0, 0)">
-    <g class="stagger" style="animation-delay: 450ms">
-      <circle cx="5" cy="6" r="5" fill="#4F5D95" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        PHP 9.63%
-      </text>
-    </g>
-  </g><g transform="translate(0, 25)">
-    <g class="stagger" style="animation-delay: 600ms">
-      <circle cx="5" cy="6" r="5" fill="#00B4AB" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        Dart 4.55%
-      </text>
-    </g>
-  </g><g transform="translate(0, 50)">
-    <g class="stagger" style="animation-delay: 750ms">
-      <circle cx="5" cy="6" r="5" fill="#438eff" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        Objective-C 4.44%
-      </text>
-    </g>
-  </g><g transform="translate(0, 75)">
-    <g class="stagger" style="animation-delay: 900ms">
-      <circle cx="5" cy="6" r="5" fill="#663399" />
-      <text data-testid="lang-name" x="15" y="10" class='lang-name'>
-        CSS 2.88%
-      </text>
-    </g>
-  </g></g>
-    </g>
-  
-    </svg>
-  
-        </g>
-      </svg>
-    
+            <text
+              x="25"
+              y="74"
+              class="label"
+            >
+              Dart
+            </text>
+
+            <text
+              x="470"
+              y="74"
+              text-anchor="end"
+              class="percentage"
+            >
+              26.5%
+            </text>
+
+            <rect
+              x="25"
+              y="84"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="84"
+              rx="4"
+              width="117.90"
+              height="8"
+              fill="#00B4AB"
+            />
+            
+            <text
+              x="25"
+              y="108"
+              class="label"
+            >
+              Hack
+            </text>
+
+            <text
+              x="470"
+              y="108"
+              text-anchor="end"
+              class="percentage"
+            >
+              19.2%
+            </text>
+
+            <rect
+              x="25"
+              y="118"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="118"
+              rx="4"
+              width="85.52"
+              height="8"
+              fill="#3fb950"
+            />
+            
+            <text
+              x="25"
+              y="142"
+              class="label"
+            >
+              TypeScript
+            </text>
+
+            <text
+              x="470"
+              y="142"
+              text-anchor="end"
+              class="percentage"
+            >
+              15.3%
+            </text>
+
+            <rect
+              x="25"
+              y="152"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="152"
+              rx="4"
+              width="68.11"
+              height="8"
+              fill="#3178c6"
+            />
+            
+            <text
+              x="25"
+              y="176"
+              class="label"
+            >
+              JavaScript
+            </text>
+
+            <text
+              x="470"
+              y="176"
+              text-anchor="end"
+              class="percentage"
+            >
+              12.0%
+            </text>
+
+            <rect
+              x="25"
+              y="186"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="186"
+              rx="4"
+              width="53.52"
+              height="8"
+              fill="#f1e05a"
+            />
+            
+            <text
+              x="25"
+              y="210"
+              class="label"
+            >
+              SCSS
+            </text>
+
+            <text
+              x="470"
+              y="210"
+              text-anchor="end"
+              class="percentage"
+            >
+              5.6%
+            </text>
+
+            <rect
+              x="25"
+              y="220"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="220"
+              rx="4"
+              width="24.91"
+              height="8"
+              fill="#a371f7"
+            />
+            
+            <text
+              x="25"
+              y="244"
+              class="label"
+            >
+              PHP
+            </text>
+
+            <text
+              x="470"
+              y="244"
+              text-anchor="end"
+              class="percentage"
+            >
+              5.0%
+            </text>
+
+            <rect
+              x="25"
+              y="254"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="254"
+              rx="4"
+              width="22.39"
+              height="8"
+              fill="#4F5D95"
+            />
+            
+            <text
+              x="25"
+              y="278"
+              class="label"
+            >
+              Objective-C
+            </text>
+
+            <text
+              x="470"
+              y="278"
+              text-anchor="end"
+              class="percentage"
+            >
+              3.7%
+            </text>
+
+            <rect
+              x="25"
+              y="288"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="288"
+              rx="4"
+              width="16.33"
+              height="8"
+              fill="#79c0ff"
+            />
+            
+            <text
+              x="25"
+              y="312"
+              class="label"
+            >
+              Svelte
+            </text>
+
+            <text
+              x="470"
+              y="312"
+              text-anchor="end"
+              class="percentage"
+            >
+              3.4%
+            </text>
+
+            <rect
+              x="25"
+              y="322"
+              rx="4"
+              width="445"
+              height="8"
+              fill="#21262d"
+            />
+
+            <rect
+              x="25"
+              y="322"
+              rx="4"
+              width="15.24"
+              height="8"
+              fill="#ff3e00"
+            />
+            
+
+  <text
+    x="25"
+    y="347"
+    class="footer"
+  >
+    Personal, private and accessible organisation repositories
+  </text>
+</svg>
