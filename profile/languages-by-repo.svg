@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="326" viewBox="0 0 495 326" role="img" aria-label="Languages by repository across repositories accessible to Dayshin">
+      <style>
+        .title { font: 600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #58a6ff; }
+        .label { font: 500 13px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #c9d1d9; }
+        .percentage { font: 400 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; fill: #8b949e; }
+      </style>
+      <rect x="0.5" y="0.5" rx="6" width="494" height="325" fill="#0d1117" stroke="#30363d" />
+      <text x="25" y="35" class="title">Languages by Repository</text>
+      
+              <text x="25" y="70" class="label">Dart</text>
+              <text x="470" y="70" text-anchor="end" class="percentage">29.2%</text>
+              <rect x="25" y="79" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="79" rx="3.5" width="129.79" height="7" fill="#00B4AB" />
+            
+              <text x="25" y="101" class="label">TypeScript</text>
+              <text x="470" y="101" text-anchor="end" class="percentage">21.9%</text>
+              <rect x="25" y="110" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="110" rx="3.5" width="97.34" height="7" fill="#3178c6" />
+            
+              <text x="25" y="132" class="label">Svelte</text>
+              <text x="470" y="132" text-anchor="end" class="percentage">9.4%</text>
+              <rect x="25" y="141" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="141" rx="3.5" width="41.72" height="7" fill="#ff3e00" />
+            
+              <text x="25" y="163" class="label">JavaScript</text>
+              <text x="470" y="163" text-anchor="end" class="percentage">6.2%</text>
+              <rect x="25" y="172" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="172" rx="3.5" width="27.81" height="7" fill="#f1e05a" />
+            
+              <text x="25" y="194" class="label">PHP</text>
+              <text x="470" y="194" text-anchor="end" class="percentage">5.2%</text>
+              <rect x="25" y="203" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="203" rx="3.5" width="23.18" height="7" fill="#4F5D95" />
+            
+              <text x="25" y="225" class="label">C++</text>
+              <text x="470" y="225" text-anchor="end" class="percentage">4.2%</text>
+              <rect x="25" y="234" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="234" rx="3.5" width="18.54" height="7" fill="#f34b7d" />
+            
+              <text x="25" y="256" class="label">HTML</text>
+              <text x="470" y="256" text-anchor="end" class="percentage">4.2%</text>
+              <rect x="25" y="265" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="265" rx="3.5" width="18.54" height="7" fill="#e34c26" />
+            
+              <text x="25" y="287" class="label">Hack</text>
+              <text x="470" y="287" text-anchor="end" class="percentage">2.1%</text>
+              <rect x="25" y="296" rx="3.5" width="445" height="7" fill="#21262d" />
+              <rect x="25" y="296" rx="3.5" width="9.27" height="7" fill="#878787" />
+            
+    </svg>
+    
