@@ -1,11 +1,11 @@
-<p align="center"> <img src="https://komarev.com/ghpvc/?username=baabashinelle&label=Profile%20views&color=e91e63&style=flat" alt="baabashinelle" /> </p>
-<p align="center"> <img src="https://img.shields.io/github/followers/baabashinelle?style=social" alt="baabashinelle" /> </p>
+<p align="center"> <img src="https://komarev.com/ghpvc/?username=dayshinA&label=Profile%20views&color=e91e63&style=flat" alt="dayshinA" /> </p>
+<p align="center"> <img src="https://img.shields.io/github/followers/dayshinA?style=social" alt="dayshinA" /> </p>
 
-# Hey! <img src="https://user-images.githubusercontent.com/1303154/88677602-1635ba80-d120-11ea-84d8-d263ba5fc3c0.gif" width="28px" alt="Hello gif">, Baaba here!
+# Hey! <img src="https://user-images.githubusercontent.com/1303154/88677602-1635ba80-d120-11ea-84d8-d263ba5fc3c0.gif" width="28px" alt="Hello gif">, Dayshin here!
 
-- 🌱 I'm currently learning Data Structures and Algorithms and mastering my frontend skills as well. Also recently just got into DevOps :) 
-- 📫 How to reach me: Email @baabadampare@gmail.com
-- 🌌 Skilled in - Frontend Web Development
+- 🌱 Cracked Software Engineer ;)
+- 📫 How to reach me: Email dayshin.andan@gmail.com
+- 🌌 Skilled in - Software Development
 <h3 align="left">⚙ My Tech Stack:</h3>
 
 <p align="left">
@@ -25,10 +25,10 @@
 </p>
 
 ## **I've got everything to do with writing codes😍**
-![GitHub Streaks](http://github-readme-streak-stats.herokuapp.com?user=baabashinelle&theme=dracula&hide_border=true)
-![](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=baabashinelle&theme=github_dark)
-![](https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=baabashinelle&theme=github_dark)
-![](https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=baabashinelle&theme=github_dark)
-[![Baaba Shinelle's stats](https://github-readme-stats.vercel.app/api?username=baabashinelle&show_icons=true&theme=github_dark)](https://github.com/baabashinelle)
+![GitHub Streaks](http://github-readme-streak-stats.herokuapp.com?user=dayshinA&theme=dracula&hide_border=true)
+![](https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=dayshinA&theme=github_dark)
+![](https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=dayshinA&theme=github_dark)
+![](https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=dayshinA&theme=github_dark)
+[![Dayshin's stats](https://github-readme-stats.vercel.app/api?username=dayshinA&show_icons=true&theme=github_dark)](https://github.com/dayshinA)
  
-![GitHub Activity Graph](https://activity-graph.herokuapp.com/graph?username=baabashinelle&theme=dracula)
+![GitHub Activity Graph](https://activity-graph.herokuapp.com/graph?username=dayshinA&theme=dracula)
