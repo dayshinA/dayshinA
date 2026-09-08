@@ -8,24 +8,24 @@
       <text x="25" y="35" class="title">Languages by Commits</text>
       
               <text x="25" y="70" class="label">TypeScript</text>
-              <text x="470" y="70" text-anchor="end" class="percentage">52.6%</text>
+              <text x="470" y="70" text-anchor="end" class="percentage">52.4%</text>
               <rect x="25" y="79" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="79" rx="3.5" width="233.87" height="7" fill="#3178c6" />
+              <rect x="25" y="79" rx="3.5" width="233.13" height="7" fill="#3178c6" />
             
               <text x="25" y="101" class="label">Dart</text>
-              <text x="470" y="101" text-anchor="end" class="percentage">42.2%</text>
+              <text x="470" y="101" text-anchor="end" class="percentage">42.4%</text>
               <rect x="25" y="110" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="110" rx="3.5" width="187.67" height="7" fill="#00B4AB" />
+              <rect x="25" y="110" rx="3.5" width="188.49" height="7" fill="#00B4AB" />
             
               <text x="25" y="132" class="label">Jupyter Notebook</text>
               <text x="470" y="132" text-anchor="end" class="percentage">3.0%</text>
               <rect x="25" y="141" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="141" rx="3.5" width="13.51" height="7" fill="#DA5B0B" />
+              <rect x="25" y="141" rx="3.5" width="13.46" height="7" fill="#DA5B0B" />
             
               <text x="25" y="163" class="label">Swift</text>
               <text x="470" y="163" text-anchor="end" class="percentage">1.1%</text>
               <rect x="25" y="172" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="172" rx="3.5" width="4.98" height="7" fill="#F05138" />
+              <rect x="25" y="172" rx="3.5" width="4.96" height="7" fill="#F05138" />
             
               <text x="25" y="194" class="label">Shell</text>
               <text x="470" y="194" text-anchor="end" class="percentage">0.5%</text>
