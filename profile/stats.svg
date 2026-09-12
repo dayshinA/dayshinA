@@ -8,7 +8,7 @@
   <text x="25" y="35" class="title">Dayshin's GitHub</text>
 
   <text x="25" y="70" class="label">Accessible repositories</text>
-  <text x="455" y="70" text-anchor="end" class="value">111</text>
+  <text x="455" y="70" text-anchor="end" class="value">112</text>
 
   <text x="25" y="99" class="label">Personal repositories</text>
   <text x="455" y="99" text-anchor="end" class="value">46</text>
@@ -17,11 +17,11 @@
   <text x="455" y="128" text-anchor="end" class="value">50</text>
 
   <text x="25" y="157" class="label">Other collaborator repositories</text>
-  <text x="455" y="157" text-anchor="end" class="value">15</text>
+  <text x="455" y="157" text-anchor="end" class="value">16</text>
 
   <text x="25" y="186" class="label">Private / Public</text>
-  <text x="455" y="186" text-anchor="end" class="value">92 / 19</text>
+  <text x="455" y="186" text-anchor="end" class="value">93 / 19</text>
 
   <text x="25" y="215" class="label">Commits by me</text>
-  <text x="455" y="215" text-anchor="end" class="value">639</text>
+  <text x="455" y="215" text-anchor="end" class="value">704</text>
 </svg>
