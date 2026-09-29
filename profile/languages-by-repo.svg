@@ -8,44 +8,44 @@
       <text x="25" y="35" class="title">Languages by Repository</text>
       
               <text x="25" y="70" class="label">Dart</text>
-              <text x="470" y="70" text-anchor="end" class="percentage">28.6%</text>
+              <text x="470" y="70" text-anchor="end" class="percentage">28.0%</text>
               <rect x="25" y="79" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="79" rx="3.5" width="127.14" height="7" fill="#00B4AB" />
+              <rect x="25" y="79" rx="3.5" width="124.60" height="7" fill="#00B4AB" />
             
               <text x="25" y="101" class="label">TypeScript</text>
-              <text x="470" y="101" text-anchor="end" class="percentage">21.4%</text>
+              <text x="470" y="101" text-anchor="end" class="percentage">22.0%</text>
               <rect x="25" y="110" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="110" rx="3.5" width="95.36" height="7" fill="#3178c6" />
+              <rect x="25" y="110" rx="3.5" width="97.90" height="7" fill="#3178c6" />
             
               <text x="25" y="132" class="label">Svelte</text>
-              <text x="470" y="132" text-anchor="end" class="percentage">9.2%</text>
+              <text x="470" y="132" text-anchor="end" class="percentage">9.0%</text>
               <rect x="25" y="141" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="141" rx="3.5" width="40.87" height="7" fill="#ff3e00" />
+              <rect x="25" y="141" rx="3.5" width="40.05" height="7" fill="#ff3e00" />
             
-              <text x="25" y="163" class="label">JavaScript</text>
-              <text x="470" y="163" text-anchor="end" class="percentage">6.1%</text>
+              <text x="25" y="163" class="label">PHP</text>
+              <text x="470" y="163" text-anchor="end" class="percentage">6.0%</text>
               <rect x="25" y="172" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="172" rx="3.5" width="27.24" height="7" fill="#f1e05a" />
+              <rect x="25" y="172" rx="3.5" width="26.70" height="7" fill="#4F5D95" />
             
-              <text x="25" y="194" class="label">PHP</text>
-              <text x="470" y="194" text-anchor="end" class="percentage">5.1%</text>
+              <text x="25" y="194" class="label">JavaScript</text>
+              <text x="470" y="194" text-anchor="end" class="percentage">6.0%</text>
               <rect x="25" y="203" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="203" rx="3.5" width="22.70" height="7" fill="#4F5D95" />
+              <rect x="25" y="203" rx="3.5" width="26.70" height="7" fill="#f1e05a" />
             
               <text x="25" y="225" class="label">C#</text>
-              <text x="470" y="225" text-anchor="end" class="percentage">4.1%</text>
+              <text x="470" y="225" text-anchor="end" class="percentage">4.0%</text>
               <rect x="25" y="234" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="234" rx="3.5" width="18.16" height="7" fill="#178600" />
+              <rect x="25" y="234" rx="3.5" width="17.80" height="7" fill="#178600" />
             
               <text x="25" y="256" class="label">C++</text>
-              <text x="470" y="256" text-anchor="end" class="percentage">4.1%</text>
+              <text x="470" y="256" text-anchor="end" class="percentage">4.0%</text>
               <rect x="25" y="265" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="265" rx="3.5" width="18.16" height="7" fill="#f34b7d" />
+              <rect x="25" y="265" rx="3.5" width="17.80" height="7" fill="#f34b7d" />
             
               <text x="25" y="287" class="label">HTML</text>
-              <text x="470" y="287" text-anchor="end" class="percentage">4.1%</text>
+              <text x="470" y="287" text-anchor="end" class="percentage">4.0%</text>
               <rect x="25" y="296" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="296" rx="3.5" width="18.16" height="7" fill="#e34c26" />
+              <rect x="25" y="296" rx="3.5" width="17.80" height="7" fill="#e34c26" />
             
     </svg>
     
