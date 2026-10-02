@@ -8,39 +8,39 @@
       <text x="25" y="35" class="title">Languages by Commits</text>
       
               <text x="25" y="70" class="label">TypeScript</text>
-              <text x="470" y="70" text-anchor="end" class="percentage">53.4%</text>
+              <text x="470" y="70" text-anchor="end" class="percentage">53.2%</text>
               <rect x="25" y="79" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="79" rx="3.5" width="237.52" height="7" fill="#3178c6" />
+              <rect x="25" y="79" rx="3.5" width="236.79" height="7" fill="#3178c6" />
             
               <text x="25" y="101" class="label">Dart</text>
-              <text x="470" y="101" text-anchor="end" class="percentage">41.0%</text>
+              <text x="470" y="101" text-anchor="end" class="percentage">40.8%</text>
               <rect x="25" y="110" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="110" rx="3.5" width="182.23" height="7" fill="#00B4AB" />
+              <rect x="25" y="110" rx="3.5" width="181.67" height="7" fill="#00B4AB" />
             
               <text x="25" y="132" class="label">Jupyter Notebook</text>
               <text x="470" y="132" text-anchor="end" class="percentage">2.9%</text>
               <rect x="25" y="141" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="141" rx="3.5" width="12.97" height="7" fill="#DA5B0B" />
+              <rect x="25" y="141" rx="3.5" width="12.93" height="7" fill="#DA5B0B" />
             
               <text x="25" y="163" class="label">Swift</text>
               <text x="470" y="163" text-anchor="end" class="percentage">1.1%</text>
               <rect x="25" y="172" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="172" rx="3.5" width="4.78" height="7" fill="#F05138" />
+              <rect x="25" y="172" rx="3.5" width="4.76" height="7" fill="#F05138" />
             
               <text x="25" y="194" class="label">C#</text>
-              <text x="470" y="194" text-anchor="end" class="percentage">0.6%</text>
+              <text x="470" y="194" text-anchor="end" class="percentage">0.9%</text>
               <rect x="25" y="203" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="203" rx="3.5" width="2.73" height="7" fill="#178600" />
+              <rect x="25" y="203" rx="3.5" width="4.08" height="7" fill="#178600" />
             
               <text x="25" y="225" class="label">Shell</text>
               <text x="470" y="225" text-anchor="end" class="percentage">0.5%</text>
               <rect x="25" y="234" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="234" rx="3.5" width="2.05" height="7" fill="#89e051" />
+              <rect x="25" y="234" rx="3.5" width="2.04" height="7" fill="#89e051" />
             
               <text x="25" y="256" class="label">Dockerfile</text>
               <text x="470" y="256" text-anchor="end" class="percentage">0.5%</text>
               <rect x="25" y="265" rx="3.5" width="445" height="7" fill="#21262d" />
-              <rect x="25" y="265" rx="3.5" width="2.05" height="7" fill="#79c0ff" />
+              <rect x="25" y="265" rx="3.5" width="2.04" height="7" fill="#79c0ff" />
             
               <text x="25" y="287" class="label">DIGITAL Command Language</text>
               <text x="470" y="287" text-anchor="end" class="percentage">0.2%</text>
