@@ -20,7 +20,7 @@
   <text x="455" y="157" text-anchor="end" class="value">18</text>
 
   <text x="25" y="186" class="label">Private / Public</text>
-  <text x="455" y="186" text-anchor="end" class="value">104 / 24</text>
+  <text x="455" y="186" text-anchor="end" class="value">102 / 26</text>
 
   <text x="25" y="215" class="label">Commits by me</text>
   <text x="455" y="215" text-anchor="end" class="value">842</text>
